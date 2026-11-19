@@ -1,0 +1,26 @@
+﻿services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mern-estate-api
+    environment:
+      MONGO: ${MONGO:?MONGO is missing from root .env}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is missing from root .env}
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        VITE_FIREBASE_API_KEY: ${VITE_FIREBASE_API_KEY:?Firebase key is missing from root .env}
+    container_name: mern-estate-client
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
