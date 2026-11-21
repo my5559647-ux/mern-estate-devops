@@ -30,3 +30,16 @@ jobs:
       - name: Build frontend
         working-directory: client
         run: npm run build
+      - name: Validate Docker Compose
+        env:
+          MONGO: mongodb://localhost:27017/ci
+          JWT_SECRET: ci-only-placeholder
+          VITE_FIREBASE_API_KEY: ci-only-placeholder
+        run: docker compose config --quiet
+
+      - name: Build Docker Images
+        env:
+          MONGO: mongodb://localhost:27017/ci
+          JWT_SECRET: ci-only-placeholder
+          VITE_FIREBASE_API_KEY: ci-only-placeholder
+        run: docker compose build
